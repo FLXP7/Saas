@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Ludicrum</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <div class="sidebar-logo">Ludicrum</div>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+
+  <div class="dash-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">Ludicrum</div>
+
+      <ul class="sidebar-nav">
+        <li><a href="/dashboard.html" class="active"><span class="nav-icon">📊</span> Dashboard</a></li>
+        <li><a href="#" onclick="document.getElementById('btnNewEvent').click()"><span class="nav-icon">➕</span> Novo Evento</a></li>
+      </ul>
+
+      <div class="sidebar-user">
+        <div class="sidebar-user-info">
+          <div class="sidebar-avatar" id="userAvatar">U</div>
+          <div>
+            <div class="sidebar-user-name" id="userName">Carregando...</div>
+            <div class="sidebar-user-plan" id="userPlan">—</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm btn-block" onclick="handleLogout()">Sair</button>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-header">
+        <h1>Meus Eventos</h1>
+        <button class="btn btn-primary" id="btnNewEvent">➕ Novo Evento</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total de Eventos</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Publicados</div>
+          <div class="stat-value" id="statPublished">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total de Inscritos</div>
+          <div class="stat-value" id="statAttendees">0</div>
+        </div>
+      </div>
+
+      <div class="events-grid" id="eventsGrid">
+        <div class="spinner"></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="eventModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="eventModalTitle">Novo Evento</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+
+      <div id="modalAlert" class="alert"></div>
+
+      <form id="eventForm">
+        <input type="hidden" id="eventId">
+
+        <div class="form-group">
+          <label for="eventTitle">Título do Evento</label>
+          <input type="text" id="eventTitle" class="form-control" placeholder="Nome do seu evento" required>
+        </div>
+
+        <div class="form-group">
+          <label for="eventDescription">Descrição</label>
+          <textarea id="eventDescription" class="form-control" placeholder="Descreva seu evento"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="eventBanner">URL do Banner</label>
+          <input type="url" id="eventBanner" class="form-control" placeholder="https://exemplo.com/banner.jpg">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="eventStartDate">Início</label>
+            <input type="datetime-local" id="eventStartDate" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="eventEndDate">Término</label>
+            <input type="datetime-local" id="eventEndDate" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="eventProvider">Provedor de Stream</label>
+            <select id="eventProvider" class="form-control">
+              <option value="youtube_unlisted">YouTube (Não-listado)</option>
+              <option value="vimeo">Vimeo</option>
+              <option value="custom_embed">Embed Customizado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="eventStatus">Status</label>
+            <select id="eventStatus" class="form-control">
+              <option value="draft">Rascunho</option>
+              <option value="published">Publicado</option>
+              <option value="finished">Encerrado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="eventStream">URL da Transmissão (privada)</label>
+          <input type="url" id="eventStream" class="form-control" placeholder="https://youtube.com/watch?v=...">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('eventModal').classList.remove('active')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Evento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evento — Ludicrum</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/event.css">
+</head>
+<body>
+  <div id="pageContent">
+    <nav class="event-navbar">
+      <a href="/dashboard.html" class="event-navbar-logo">Ludicrum</a>
+      <div id="navActions"></div>
+    </nav>
+
+    <div id="eventContent">
+      <div id="authEventView">
+        <div style="padding:2rem;max-width:1000px;margin:0 auto">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+            <button class="btn btn-secondary btn-sm" onclick="goBack()">← Voltar</button>
+            <h1 id="eventTitle" style="flex:1">Carregando...</h1>
+            <span id="eventStatus"></span>
+          </div>
+
+          <div class="stats-grid" style="margin-bottom:1.5rem">
+            <div class="stat-card">
+              <div class="stat-label">Inscritos</div>
+              <div class="stat-value" id="statRegistrations">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Check-ins</div>
+              <div class="stat-value" id="statCheckedIn">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Lotes</div>
+              <div class="stat-value" id="statTickets">0</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem">
+            <p><strong>Datas:</strong> <span id="eventDates">—</span></p>
+            <p style="margin-top:0.5rem"><strong>Descrição:</strong> <span id="eventDescription">—</span></p>
+            <p style="margin-top:0.5rem"><strong>Slug:</strong> <code id="eventSlug">—</code></p>
+            <p style="margin-top:0.5rem"><strong>Link público:</strong> <a id="publicLink" href="#" target="_blank">—</a></p>
+          </div>
+
+          <div style="display:flex;gap:0.75rem;margin-bottom:2rem;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" id="btnEdit">✏️ Editar</button>
+            <button class="btn btn-danger btn-sm" id="btnDelete">🗑️ Excluir</button>
+          </div>
+
+          <div class="tab-nav">
+            <button class="tab-btn active" data-tab="tabTickets">Ingressos</button>
+            <button class="tab-btn" data-tab="tabAttendees">Participantes</button>
+            <button class="tab-btn" data-tab="tabCheckin">Check-in</button>
+          </div>
+
+          <div id="tabTickets" class="tab-content active">
+            <h3>Lotes de Ingressos</h3>
+            <div id="ticketsList" class="ticket-list"></div>
+
+            <div class="card mt-3">
+              <h4 style="margin-bottom:1rem">Criar Novo Lote</h4>
+              <div id="ticketAlert" class="alert"></div>
+              <form id="ticketForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="ticketName">Nome do Lote</label>
+                    <input type="text" id="ticketName" class="form-control" placeholder="Ex: Ingresso VIP" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="ticketPrice">Preço (R$)</label>
+                    <input type="number" id="ticketPrice" class="form-control" placeholder="0.00" step="0.01" min="0" value="0">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="ticketQuantity">Quantidade Total</label>
+                  <input type="number" id="ticketQuantity" class="form-control" placeholder="100" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Criar Lote</button>
+              </form>
+            </div>
+          </div>
+
+          <div id="tabAttendees" class="tab-content">
+            <h3>Lista de Participantes</h3>
+            <div id="attendeesTable"></div>
+          </div>
+
+          <div id="tabCheckin" class="tab-content">
+            <h3>Check-in</h3>
+            <div class="card mt-2" style="max-width:500px">
+              <p class="text-muted mb-2">Insira o token de acesso do participante para realizar o check-in.</p>
+              <div id="checkinAlert" class="alert"></div>
+              <form id="checkinForm">
+                <div class="form-group">
+                  <label for="checkinToken">Token de Acesso</label>
+                  <input type="text" id="checkinToken" class="form-control" placeholder="Cole o token aqui" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-sm">Confirmar Check-in</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="publicEventView" class="hidden">
+        <div class="event-hero" id="heroSection"></div>
+        <div class="event-content">
+          <div class="event-info">
+            <h2>Sobre o Evento</h2>
+            <div class="event-description" id="pubEventDescription"></div>
+            <ul class="event-meta-list" id="pubEventMeta"></ul>
+          </div>
+          <div class="ticket-selection" id="ticketSelection">
+            <h3>Ingressos</h3>
+            <div id="pubTicketsContainer"></div>
+            <div id="pubRegistrationSection" class="hidden">
+              <div class="registration-form mt-2">
+                <h4 style="margin-bottom:0.75rem">Seus Dados</h4>
+                <div id="pubRegAlert" class="alert"></div>
+                <form id="pubRegistrationForm">
+                  <div class="form-group">
+                    <label for="pubAttendeeName">Nome completo</label>
+                    <input type="text" id="pubAttendeeName" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="pubAttendeeEmail">Email</label>
+                    <input type="email" id="pubAttendeeEmail" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">Confirmar Inscrição</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/event-detail.js"></script>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('slug')) {
+        document.getElementById('authEventView').classList.add('hidden');
+        document.getElementById('publicEventView').classList.remove('hidden');
+        document.getElementById('navActions').innerHTML = '';
+
+        let pubSelectedTicketId = null;
+
+        const loadPubEvent = async () => {
+          try {
+            const { data } = await apiGet('/public/events/' + params.get('slug'));
+            document.title = data.title + ' — Ludicrum';
+
+            document.getElementById('heroSection').innerHTML =
+              (data.banner_url ? '<img src="' + sanitize(data.banner_url) + '" alt="">' : '') +
+              '<div class="event-hero-overlay"><h1 class="event-hero-title">' + sanitize(data.title) + '</h1>' +
+              '<p class="event-hero-organizer">por ' + (data.organizer ? sanitize(data.organizer.name) : 'Organizador') + '</p></div>';
+
+            document.getElementById('pubEventDescription').textContent = data.description || 'Sem descrição disponível.';
+            document.getElementById('pubEventMeta').innerHTML =
+              '<li><span class="meta-icon">📅</span> Início: ' + formatDate(data.start_date) + '</li>' +
+              '<li><span class="meta-icon">🏁</span> Término: ' + formatDate(data.end_date) + '</li>';
+
+            const tc = document.getElementById('pubTicketsContainer');
+            if (!data.tickets || data.tickets.length === 0) {
+              tc.innerHTML = '<p class="text-muted">Nenhum ingresso disponível</p>';
+              return;
+            }
+
+            tc.innerHTML = data.tickets.map(function(t) {
+              return '<div class="ticket-card ' + (t.available_quantity <= 0 ? 'sold-out' : '') + '" data-tid="' + t.id + '">' +
+                '<div class="ticket-card-header"><span class="ticket-card-name">' + sanitize(t.name) + '</span>' +
+                '<span class="ticket-card-price">' + (parseFloat(t.price) === 0 ? 'Grátis' : formatCurrency(t.price)) + '</span></div>' +
+                '<div class="ticket-card-avail">' + (t.available_quantity <= 0 ? 'Esgotado' : t.available_quantity + ' disponíveis') + '</div></div>';
+            }).join('');
+
+            tc.querySelectorAll('.ticket-card:not(.sold-out)').forEach(function(card) {
+              card.addEventListener('click', function() {
+                pubSelectedTicketId = parseInt(this.dataset.tid);
+                tc.querySelectorAll('.ticket-card').forEach(function(c) { c.classList.remove('selected'); });
+                this.classList.add('selected');
+                document.getElementById('pubRegistrationSection').classList.remove('hidden');
+              });
+            });
+
+            document.getElementById('pubRegistrationForm').addEventListener('submit', async function(e) {
+              e.preventDefault();
+              hideAlert('pubRegAlert');
+              if (!pubSelectedTicketId) { showAlert('pubRegAlert', 'Selecione um ingresso'); return; }
+              const btn = this.querySelector('button[type="submit"]');
+              btn.disabled = true; btn.textContent = 'Processando...';
+              try {
+                const { data: reg } = await apiPost('/public/events/' + params.get('slug') + '/register', {
+                  ticket_id: pubSelectedTicketId,
+                  attendee_name: document.getElementById('pubAttendeeName').value.trim(),
+                  attendee_email: document.getElementById('pubAttendeeEmail').value.trim()
+                });
+                document.getElementById('ticketSelection').innerHTML =
+                  '<div class="registration-success"><div class="success-icon">🎉</div><h3>Inscrição Confirmada!</h3>' +
+                  '<p class="text-muted">' + sanitize(reg.event_title) + ' — ' + sanitize(reg.ticket_name) + '</p>' +
+                  '<div class="access-token-box"><strong>Seu Token de Acesso:</strong><br>' + sanitize(reg.access_token) + '</div>' +
+                  '<p style="font-size:0.85rem;color:var(--text-muted)">Guarde este token! Ele é necessário para acessar a transmissão.</p>' +
+                  '<a href="/watch.html?slug=' + params.get('slug') + '" class="btn btn-primary mt-2">Acessar Transmissão</a></div>';
+              } catch (err) {
+                showAlert('pubRegAlert', err.message);
+                btn.disabled = false; btn.textContent = 'Confirmar Inscrição';
+              }
+            });
+          } catch (err) {
+            document.getElementById('publicEventView').innerHTML =
+              '<div class="empty-state" style="padding-top:6rem"><h3>Evento não encontrado</h3><p class="text-muted">' + sanitize(err.message) + '</p></div>';
+          }
+        };
+
+        loadPubEvent();
+      }
+    })();
+  </script>
+</body>
+</html>

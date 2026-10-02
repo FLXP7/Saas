@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Ludicrum</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <h1>Ludicrum</h1>
+        <p>Plataforma de Eventos Online</p>
+      </div>
+
+      <div id="loginAlert" class="alert"></div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" placeholder="seu@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" class="form-control" placeholder="Sua senha" required>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn btn-primary btn-block btn-lg">Entrar</button>
+      </form>
+
+      <div class="auth-footer">
+        Não tem uma conta? <a href="/register.html">Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>
