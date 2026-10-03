@@ -3,7 +3,12 @@ const express = require('express');
 const path = require('path');
 const sequelize = require('./src/config/database');
 
-const app = express(); // <-- Faltava declarar esta linha
+// Importar as rotas
+const authRoutes = require('./src/routes/authRoutes');
+const eventRoutes = require('./src/routes/eventRoutes');
+const publicRoutes = require('./src/routes/publicRoutes');
+
+const app = express();
 
 // Middlewares essenciais
 app.use(express.json());
@@ -12,9 +17,17 @@ app.use(express.urlencoded({ extended: true }));
 // Servir os ficheiros estáticos da pasta public (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// (Aqui ficam as suas rotas, ex: app.use('/api', rotas))
+// Registar as rotas da API com o prefixo /api
+app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/public', publicRoutes);
 
-// Sincronizar banco e iniciar o servidor
+// Rota raiz para abrir a página de login
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Sincronizar a base de dados e iniciar o servidor
 sequelize.authenticate()
   .then(() => {
     console.log('✅ Conexão com o MySQL do Aiven estabelecida com sucesso!');
